@@ -370,7 +370,7 @@ def main():
 	       number_of_vehicles_involved, witnesses, total_claim_amount)
             if result == 0:
                 st.success('This is a Valid Automobile Insurance Claim')
-            if result == 1:
+            elif result == 1:
                 st.success('This is a Fraud Automobile Insurance Claim')
 
 

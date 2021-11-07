@@ -254,7 +254,7 @@ def main():
         corrmat = df2.corr()
         fig = go.Figure(data = go.Heatmap( z = corrmat.values, x = list(corrmat.columns),y = list(corrmat.index),colorscale = 'Viridis'))
         fig.update_layout(title = 'Correlation')
-        st.write()
+        st.write(fig)
         #Correlation with output variable
         cor_target = abs(corrmat["fraud_reported"])
         #Selecting highly correlated features

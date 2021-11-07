@@ -1,10 +1,16 @@
 import pandas as pd
 import numpy as np
 import datetime as dt
-import plotly.offline as py
-import plotly.express as px
-import plotly.graph_objects as go
 import seaborn as sns
+import matplotlib.pyplot as plt
+import plotly.offline as py
+import plotly.graph_objs as go
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+import plotly.tools as tls
+import plotly.figure_factory as ff
+py.init_notebook_mode()
+import plotly.express as px
+
 
 
 from sklearn.model_selection import train_test_split
@@ -30,7 +36,7 @@ from sklearn.model_selection import train_test_split
 
 # loading in the model to predict on the data
 pickle_in = open('output.pkl', 'rb')
-rand_clf = pickle.load(pickle_in)
+rfc = pickle.load(pickle_in)
 
 df = pd.read_csv('insurance_claims.csv')
 df = df.rename(columns={'capital-gains': 'capital_gains', 'capital-loss': 'capital_loss'})

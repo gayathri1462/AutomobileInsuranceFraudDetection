@@ -136,7 +136,8 @@ for col in cat_df.columns:
         df2[col] = le.transform(df2[col])
         
 #X = new_df[['months_as_customer', 'policy_csl', 'insured_sex','collision_type', 'incident_severity','authorities_contacted', 'incident_state', 'witnesses','injury_claim', 'property_claim','vehicle_claim', 'auto_make',]]
-X_df = df2.drop(["fraud_reported"],axis=1)
+X_df = df2[['insured_sex', 'insured_hobbies',  'incident_type', 'collision_type', 'incident_severity',
+       'authorities_contacted', 'number_of_vehicles_involved', 'witnesses', 'total_claim_amount']]
 y_df = df2['fraud_reported']
 
 from imblearn.over_sampling import SMOTE
@@ -154,15 +155,36 @@ X_train, X_test, y_train, y_test = train_test_split(x_scaled,y,test_size = 0.20)
 
 # loading in the model to predict on the data
 pickle_in = open('output.pkl', 'rb')
-rfc = pickle.load(pickle_in)
+svc = pickle.load(pickle_in)
 
-def prediction(insured_sex, insured_occupation, insured_hobbies, capital_gains,capital_loss, incident_type, collision_type, incident_severity,authorities_contacted, 
-	       incident_hour_of_the_day,number_of_vehicles_involved, witnesses, total_claim_amount, age_group, month_group,policy_annual_premium_groups):
+def prediction(insured_sex, insured_hobbies, incident_type, collision_type, incident_severity,authorities_contacted, 
+	       number_of_vehicles_involved, witnesses, total_claim_amount):
     if insured_sex == "Female":
-	insured_sex = 0
+	    insured_sex = 0
     elif insured_sex == "Male":
-	insured_sex = 1
-    
+	    insured_sex = 1
+    if insured_hobbies == "other":
+        insured_hobbies=2
+    elif insured_hobbies == "chess":
+        insured_hobbies=0
+    elif insured_hobbies == "cross-fit":
+        insured_hobbies=1
+    if incident_type == 'Single Vehicle Collision':
+        incident_type=2
+    elif incident_type == 'Vehicle Theft':
+        incident_type=3
+    elif incident_type =='Multi-vehicle Collision':
+        incident_type=0
+    elif incident_type == 'Parked Car':
+        incident_type=1
+    if collision_type == 'Unknown':
+        collision_type = 0
+    elif collision_type == 'Side Collision':
+        collision_type=3
+    elif collision_type == 'Rear Collision':
+        collision_type=2
+    elif collision_type == 'Front Collision':
+        collision_type=1
     if incident_severity == "Minor Damage":
         incident_severity = 1
     elif incident_severity == "Total Loss":
@@ -171,8 +193,17 @@ def prediction(insured_sex, insured_occupation, insured_hobbies, capital_gains,c
         incident_severity = 0  
     elif incident_severity == "Trivial Damage":
         incident_severity = 3
-    prediction = rfc.predict([[insured_sex, insured_occupation, insured_hobbies, capital_gains,capital_loss, incident_type, collision_type, incident_severity,authorities_contacted, 
-	       incident_hour_of_the_day,number_of_vehicles_involved, witnesses, total_claim_amount, age_group, month_group,policy_annual_premium_groups]])
+    if authorities_contacted == 'Police':
+        authorities_contacted = 4
+    elif authorities_contacted == 'None':
+        authorities_contacted = 2
+    elif authorities_contacted == 'Fire':
+        authorities_contacted = 1
+    elif authorities_contacted == 'Other':
+        authorities_contacted = 3
+    elif authorities_contacted ==  'Ambulance':
+        authorities_contacted = 0
+    prediction = svc.predict([[insured_sex,  insured_hobbies, incident_type, collision_type, incident_severity,authorities_contacted,number_of_vehicles_involved, witnesses, total_claim_amount]])
     return prediction
 
 
@@ -291,40 +322,43 @@ def main():
         st.write(y_train.shape)
         st.write(y_test.shape)
         st.header("Logistic Regression")
-        st.write("Train Set Accuracy:88.53")
-        st.write("Test Set Accuracy:88.07" )
+        st.write("Train Set Accuracy:87.95")
+        st.write("Test Set Accuracy:88.41" )
         st.header("Decision Tree Classifier")
         st.write("Train Set Accuracy:100")
-        st.write("Test Set Accuracy:87.41" )
+        st.write("Test Set Accuracy:87.08" )
         st.header("Random Forest Classifier")
         st.write("Train Set Accuracy:100")
-        st.write("Test Set Accuracy:90.06" )
-        st.header("Support Vector Classifier")
-        st.write("Train Set Accuracy:87.70")
         st.write("Test Set Accuracy:88.41" )
+        st.header("Support Vector Classifier")
+        st.write("Train Set Accuracy:87.20")
+        st.write("Test Set Accuracy:89.07" )
         st.header("Linear Discriminant Analysis")
-        st.write("Train Set Accuracy:86.87")
-        st.write("Test Set Accuracy:87.08" )
+        st.write("Train Set Accuracy:86.12")
+        st.write("Test Set Accuracy:86.09" )
 
     if add_pages == 'Model Comparisons':
         st.header("Model Comparisons")
         models = pd.DataFrame({
          'Model': ['Logistic','Decision Tree Classifier','Random Forest Classifier','SVC','LDA'],
-        'Score': [  0.880795,0.874172,0.900662,  0.884106,0.870861] })
+        'Score': [  0.88410596, 0.87086093, 0.88410596, 0.89072848, 0.86092715] })
         models.sort_values(by = 'Score', ascending = False)
         colors=['Logistic','Decision Tree Classifier','Random Forest Classifier','SVC','LDA']
         fig = px.bar(models, x='Model', y='Score',color=colors)
         st.write(fig)
     if add_pages=="Predictions":
-        umbrella_limit = st.number_input("Umbrella Limit",min_value=0, max_value=6000000, value=0,step=1,format="%i")
-	
-        incident_severity=  st.number_input('Incident Severity',min_value=0, max_value=6000000, value=0,step=1,format="%i")
-        bodily_injuries = st.number_input("Bodily Injuries:",min_value=0, max_value=6000000, value=0,step=1,format="%i")
-        witnesses = st.number_input("Number of Witnesses:",min_value=0, max_value=6000000, value=0,step=1,format="%i")
-        injury_claim = st.number_input("Injury Claim Amount",min_value=0, max_value=6000000, value=0,step=1,format="%i")
-        property_claim =  st.number_input("Property Claim Amount",min_value=0, max_value=6000000, value=0,step=1,format="%i")
-        vehicle_claim = st.number_input("Vehicle Claim Amount",min_value=0, max_value=6000000, value=0,step=1,format="%i")
-        user_report_data = {'umbrella_limit':umbrella_limit,'incident_severity':incident_severity,'bodily_injuries':bodily_injuries,'witnesses':witnesses,'injury_claim':injury_claim,'property_claim':property_claim,'vehicle_claim':vehicle_claim}
+
+        insured_sex =  st.selectbox('Sex',("Female","Male"))
+        insured_hobbies =  st.selectbox('Hobbies',('other' ,'chess' ,'cross-fit'))
+        incident_type = st.selectbox('Incident Type',('Single Vehicle Collision', 'Vehicle Theft' ,'Multi-vehicle Collision','Parked Car'))
+        collision_type =  st.selectbox('Collision Type',('Side Collision' ,'Unknown', 'Rear Collision', 'Front Collision'))
+        incident_severity=  st.selectbox('Incident Severity',("Minor Damage","Total Loss","Major Damage","Trivial Damage"))
+        authorities_contacted = st.selectbox('Authorities Contacted',('Police', 'None', 'Fire', 'Other' ,'Ambulance'))
+        number_of_vehicles_involved = st.number_input("Number of Vehicles Involved",min_value=0, max_value=6000000, value=0,step=1,format="%i")
+        witnesses = st.number_input("Number of Witnesses",min_value=0, max_value=6000000, value=0,step=1,format="%i")
+        total_claim_amount = st.number_input("Total Claim Amount",min_value=0, max_value=6000000, value=0,step=1,format="%i")
+        
+        user_report_data = {'insured_sex':insured_sex,'insured_hobbies':insured_hobbies,'incident_type':incident_type,'collision_type':collision_type,'incident_severity':incident_severity,'authorities_contacted':authorities_contacted,'number_of_vehicles_involved':number_of_vehicles_involved,'witnesses':witnesses,'total_claim_amount':total_claim_amount}
         report_data = pd.DataFrame(user_report_data, index=[0])
         st.subheader('User Input Data')
         st.write(report_data)
@@ -332,7 +366,8 @@ def main():
         result =""
         st.subheader('Result: ')
         if st.button("Predict"):
-            result = prediction(umbrella_limit,incident_severity,bodily_injuries,witnesses,injury_claim,property_claim,vehicle_claim)
+            result = prediction(insured_sex, insured_hobbies, incident_type, collision_type, incident_severity,authorities_contacted, 
+	       number_of_vehicles_involved, witnesses, total_claim_amount)
             if result == 0:
                 st.success('This is a Valid Automobile Insurance Claim')
             if result == 1:

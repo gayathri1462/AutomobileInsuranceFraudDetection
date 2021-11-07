@@ -34,10 +34,6 @@ import streamlit as st
 from sklearn.ensemble import VotingClassifier
 from sklearn.model_selection import train_test_split
 
-# loading in the model to predict on the data
-pickle_in = open('output.pkl', 'rb')
-rfc = pickle.load(pickle_in)
-
 df = pd.read_csv('insurance_claims.csv')
 df = df.rename(columns={'capital-gains': 'capital_gains', 'capital-loss': 'capital_loss'})
 # removing column named _c39 as it contains only null values
@@ -156,8 +152,8 @@ x_scaled = StandardScaler().fit_transform(X)
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(x_scaled,y,test_size = 0.20)
 
-
-pickle_in = open('rfc.pkl', 'rb')
+# loading in the model to predict on the data
+pickle_in = open('output.pkl', 'rb')
 rfc = pickle.load(pickle_in)
 
 

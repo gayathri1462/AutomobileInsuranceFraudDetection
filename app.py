@@ -156,9 +156,23 @@ X_train, X_test, y_train, y_test = train_test_split(x_scaled,y,test_size = 0.20)
 pickle_in = open('output.pkl', 'rb')
 rfc = pickle.load(pickle_in)
 
-
-def prediction(umbrella_limit,incident_severity,bodily_injuries,witnesses,injury_claim,property_claim,vehicle_claim):
-    prediction = rfc.predict([[umbrella_limit,incident_severity,bodily_injuries,witnesses,injury_claim,property_claim,vehicle_claim]])
+def prediction(insured_sex, insured_occupation, insured_hobbies, capital_gains,capital_loss, incident_type, collision_type, incident_severity,authorities_contacted, 
+	       incident_hour_of_the_day,number_of_vehicles_involved, witnesses, total_claim_amount, age_group, month_group,policy_annual_premium_groups):
+    if insured_sex == "Female":
+	insured_sex = 0
+    elif insured_sex == "Male":
+	insured_sex = 1
+    
+    if incident_severity == "Minor Damage":
+        incident_severity = 1
+    elif incident_severity == "Total Loss":
+        incident_severity = 2
+    elif incident_severity == "Major Damage":
+        incident_severity = 0  
+    elif incident_severity == "Trivial Damage":
+        incident_severity = 3
+    prediction = rfc.predict([[insured_sex, insured_occupation, insured_hobbies, capital_gains,capital_loss, incident_type, collision_type, incident_severity,authorities_contacted, 
+	       incident_hour_of_the_day,number_of_vehicles_involved, witnesses, total_claim_amount, age_group, month_group,policy_annual_premium_groups]])
     return prediction
 
 
@@ -303,6 +317,7 @@ def main():
         st.write(fig)
     if add_pages=="Predictions":
         umbrella_limit = st.number_input("Umbrella Limit",min_value=0, max_value=6000000, value=0,step=1,format="%i")
+	
         incident_severity=  st.number_input('Incident Severity',min_value=0, max_value=6000000, value=0,step=1,format="%i")
         bodily_injuries = st.number_input("Bodily Injuries:",min_value=0, max_value=6000000, value=0,step=1,format="%i")
         witnesses = st.number_input("Number of Witnesses:",min_value=0, max_value=6000000, value=0,step=1,format="%i")

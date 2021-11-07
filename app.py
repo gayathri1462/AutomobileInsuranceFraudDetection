@@ -261,7 +261,7 @@ def main():
         relevant_features = cor_target[cor_target>0]
         st.write(relevant_features)
 
-    if add_pages=="Model training":
+    if add_pages=="Model Training":
         st.header("SMOTE(synthetic minority oversampling technique)")
         st.subheader("Actual Dataset")
         st.write(X_df.shape)

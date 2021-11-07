@@ -11,8 +11,6 @@ import plotly.figure_factory as ff
 py.init_notebook_mode()
 import plotly.express as px
 
-
-
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
@@ -31,7 +29,7 @@ with warnings.catch_warnings():
 
 import pickle
 import streamlit as st
-from sklearn.ensemble import VotingClassifier
+#from sklearn.ensemble import VotingClassifier
 from sklearn.model_selection import train_test_split
 
 df = pd.read_csv('insurance_claims.csv')
@@ -145,13 +143,13 @@ sm = SMOTE(random_state=24)
 X,y = sm.fit_resample(X_df, y_df)
 
 #stadardize data    
-from sklearn.preprocessing import StandardScaler
-x_scaled = StandardScaler().fit_transform(X)
+#from sklearn.preprocessing import StandardScaler
+#x_scaled = StandardScaler().fit_transform(X)
 
 # splitting data into training set and test set
 
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(x_scaled,y,test_size = 0.20)
+X_train, X_test, y_train, y_test = train_test_split(x,y,test_size = 0.20)
 
 # loading in the model to predict on the data
 pickle_in = open('output.pkl', 'rb')
@@ -322,26 +320,26 @@ def main():
         st.write(y_train.shape)
         st.write(y_test.shape)
         st.header("Logistic Regression")
-        st.write("Train Set Accuracy:87.95")
-        st.write("Test Set Accuracy:88.41" )
+        st.write("Train Set Accuracy:50.41")
+        st.write("Test Set Accuracy:48.34" )
         st.header("Decision Tree Classifier")
         st.write("Train Set Accuracy:100")
-        st.write("Test Set Accuracy:87.08" )
+        st.write("Test Set Accuracy:85.09" )
         st.header("Random Forest Classifier")
         st.write("Train Set Accuracy:100")
-        st.write("Test Set Accuracy:88.41" )
+        st.write("Test Set Accuracy:86.42" )
         st.header("Support Vector Classifier")
-        st.write("Train Set Accuracy:87.20")
-        st.write("Test Set Accuracy:89.07" )
+        st.write("Train Set Accuracy:72.00")
+        st.write("Test Set Accuracy:68.21" )
         st.header("Linear Discriminant Analysis")
-        st.write("Train Set Accuracy:86.12")
-        st.write("Test Set Accuracy:86.09" )
+        st.write("Train Set Accuracy:86.54")
+        st.write("Test Set Accuracy:84.43" )
 
     if add_pages == 'Model Comparisons':
         st.header("Model Comparisons")
         models = pd.DataFrame({
          'Model': ['Logistic','Decision Tree Classifier','Random Forest Classifier','SVC','LDA'],
-        'Score': [  0.88410596, 0.87086093, 0.88410596, 0.89072848, 0.86092715] })
+        'Score': [  0.48344371, 0.85099338, 0.86423841, 0.68211921, 0.84437086]] })
         models.sort_values(by = 'Score', ascending = False)
         colors=['Logistic','Decision Tree Classifier','Random Forest Classifier','SVC','LDA']
         fig = px.bar(models, x='Model', y='Score',color=colors)
@@ -744,9 +742,9 @@ def main():
         if st.button("Predict"):
             result = prediction(insured_sex, insured_hobbies, incident_type, collision_type, incident_severity,authorities_contacted, 
 	       number_of_vehicles_involved, witnesses, total_claim_amount)
-            if result == 0:
+            if result == 1:
                 st.success('This is a Fraud Automobile Insurance Claim')
-            elif result == 1:
-		        st.success('This is a Valid Automobile Insurance Claim')
+            elif result == 0:
+		st.success('This is a Valid Automobile Insurance Claim')
 if __name__=='__main__':
     main()

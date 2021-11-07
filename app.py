@@ -312,8 +312,6 @@ def main():
         st.subheader("After Oversampling")
         st.write(X.shape)
         st.write(y.shape)
-        st.header("Standard Scaler")
-        st.write(x_scaled)
         st.header("Splitting Dataset")
         st.write(X_train.shape)
         st.write(X_test.shape)

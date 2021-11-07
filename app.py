@@ -339,7 +339,7 @@ def main():
         st.header("Model Comparisons")
         models = pd.DataFrame({
          'Model': ['Logistic','Decision Tree Classifier','Random Forest Classifier','SVC','LDA'],
-        'Score': [0.48344371, 0.85099338, 0.86423841, 0.68211921, 0.84437086]] })
+        'Score': [0.48344371, 0.85099338, 0.86423841, 0.68211921, 0.84437086] })
         models.sort_values(by = 'Score', ascending = False)
         colors=['Logistic','Decision Tree Classifier','Random Forest Classifier','SVC','LDA']
         fig = px.bar(models, x='Model', y='Score',color=colors)
@@ -369,6 +369,6 @@ def main():
             if result == 1:
                 st.success('This is a Fraud Automobile Insurance Claim')
             elif result == 0:
-		st.success('This is a Valid Automobile Insurance Claim')
+                st.success('This is a Valid Automobile Insurance Claim')
 if __name__=='__main__':
     main()

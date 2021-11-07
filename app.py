@@ -153,7 +153,7 @@ X_train, X_test, y_train, y_test = train_test_split(X,y,test_size = 0.20)
 
 # loading in the model to predict on the data
 pickle_in = open('output.pkl', 'rb')
-svc = pickle.load(pickle_in)
+rfc = pickle.load(pickle_in)
 
 def prediction(insured_sex, insured_hobbies, incident_type, collision_type, incident_severity,authorities_contacted, 
 	       number_of_vehicles_involved, witnesses, total_claim_amount):
@@ -201,7 +201,7 @@ def prediction(insured_sex, insured_hobbies, incident_type, collision_type, inci
         authorities_contacted = 3
     elif authorities_contacted ==  'Ambulance':
         authorities_contacted = 0
-    prediction = svc.predict([[insured_sex,  insured_hobbies, incident_type, collision_type, incident_severity,authorities_contacted,number_of_vehicles_involved, witnesses, total_claim_amount]])
+    prediction = rfc.predict([[insured_sex,  insured_hobbies, incident_type, collision_type, incident_severity,authorities_contacted,number_of_vehicles_involved, witnesses, total_claim_amount]])
     return prediction
 
 

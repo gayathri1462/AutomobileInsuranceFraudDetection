@@ -369,9 +369,9 @@ def main():
             result = prediction(insured_sex, insured_hobbies, incident_type, collision_type, incident_severity,authorities_contacted, 
 	       number_of_vehicles_involved, witnesses, total_claim_amount)
             if result == 0:
-                st.success('This is a Valid Automobile Insurance Claim')
-            elif result == 1:
                 st.success('This is a Fraud Automobile Insurance Claim')
+            elif result == 1:
+		st.success('This is a Valid Automobile Insurance Claim')
 
 
 if __name__=='__main__':

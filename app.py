@@ -372,7 +372,5 @@ def main():
                 st.success('This is a Fraud Automobile Insurance Claim')
             elif result == 1:
 		st.success('This is a Valid Automobile Insurance Claim')
-
-
 if __name__=='__main__':
     main()

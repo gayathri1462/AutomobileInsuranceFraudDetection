@@ -343,15 +343,17 @@ def main():
         fig = px.bar(models, x='Model', y='Score',color=colors)
         st.write(fig)
     if add_pages=="Predictions":
-
-        insured_sex =  st.selectbox('Sex',("Female","Male"))
-        insured_hobbies =  st.selectbox('Hobbies',('other' ,'chess' ,'cross-fit'))
-        incident_type = st.selectbox('Incident Type',('Single Vehicle Collision', 'Vehicle Theft' ,'Multi-vehicle Collision','Parked Car'))
-        collision_type =  st.selectbox('Collision Type',('Side Collision' ,'Unknown', 'Rear Collision', 'Front Collision'))
-        incident_severity=  st.selectbox('Incident Severity',("Minor Damage","Total Loss","Major Damage","Trivial Damage"))
-        authorities_contacted = st.selectbox('Authorities Contacted',('Police', 'None', 'Fire', 'Other' ,'Ambulance'))
-        number_of_vehicles_involved = st.number_input("Number of Vehicles Involved",min_value=0, max_value=6000000, value=0,step=1,format="%i")
-        witnesses = st.number_input("Number of Witnesses",min_value=0, max_value=6000000, value=0,step=1,format="%i")
+	col1, col2= st.columns(2)
+	with col1:
+		insured_sex =  st.selectbox('Sex',("Female","Male"))
+		insured_hobbies =  st.selectbox('Hobbies',('other' ,'chess' ,'cross-fit'))
+		incident_type = st.selectbox('Incident Type',('Single Vehicle Collision', 'Vehicle Theft' ,'Multi-vehicle Collision','Parked Car'))
+		collision_type =  st.selectbox('Collision Type',('Side Collision' ,'Unknown', 'Rear Collision', 'Front Collision'))
+	with col2:
+		incident_severity=  st.selectbox('Incident Severity',("Minor Damage","Total Loss","Major Damage","Trivial Damage"))
+		authorities_contacted = st.selectbox('Authorities Contacted',('Police', 'None', 'Fire', 'Other' ,'Ambulance'))
+		number_of_vehicles_involved = st.number_input("Number of Vehicles Involved",min_value=0, max_value=6000000, value=0,step=1,format="%i")
+		witnesses = st.number_input("Number of Witnesses",min_value=0, max_value=6000000, value=0,step=1,format="%i")
         total_claim_amount = st.number_input("Total Claim Amount",min_value=0, max_value=6000000, value=0,step=1,format="%i")
         
         user_report_data = {'insured_sex':insured_sex,'insured_hobbies':insured_hobbies,'incident_type':incident_type,'collision_type':collision_type,'incident_severity':incident_severity,'authorities_contacted':authorities_contacted,'number_of_vehicles_involved':number_of_vehicles_involved,'witnesses':witnesses,'total_claim_amount':total_claim_amount}

@@ -248,7 +248,7 @@ def main():
     if add_pages=='Exploratory Data Analysis':
         st.header("Data Distribution")
         #We will visualize the data and see if there is any feature which might influence the claims
-        col1, col2= st.columns(2)
+        col1, col2= st.columns([2,2])
         with col1:
             vis_data(df, 'insured_sex')
             vis_data(df, 'insured_education_level')
